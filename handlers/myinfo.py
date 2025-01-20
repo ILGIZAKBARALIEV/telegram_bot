@@ -11,4 +11,4 @@ async def myinfo_handler(message: types.Message):
     nickname = message.from_user.username
     await message.answer(f"Вашк имя: {name}:"
                          f"Ваш nickname {nickname}:"
-                         f"Ваш id @{id}")
+                         f"Ваш id {id}")
