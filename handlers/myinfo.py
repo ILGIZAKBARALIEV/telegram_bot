@@ -7,7 +7,7 @@ myinfo_router = Router()
 @myinfo_router.message(Command("myinfo"))
 async def myinfo_handler(message: types.Message):
     id = message.from_user.id
-    name = message.from_user.full_name
+    name = message.from_user.first_name
     nickname = message.from_user.username
     await message.answer(f"Вашк имя: {name}:"
                          f"Ваш nickname {nickname}:"

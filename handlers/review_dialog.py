@@ -5,20 +5,28 @@ from aiogram import types
 from  aiogram.fsm.context import FSMContext
 from  aiogram.fsm.state import  State,StatesGroup
 
-
 review_router = Router()
 
 class RestaurantReview(StatesGroup):
-    name = State
+    name = State()
     instagram_username = State()
-    rate = State
+    rate = State()
     extra_comments = State()
 
 
 @review_router.callback_query(F.data=='review')
 async  def start_review(call:types.CallbackQuery,state:FSMContext):
+    await call.answer("enter your review stop bot by '/stop' or '/стоп' ")
     await call.message.answer("What's your name")
     await state.set_state(RestaurantReview.name)
+
+@review_router.callback_query(Command("stop"))
+@review_router.callback_query(F.text=='стоп')
+
+
+async def stop_review(call:types.CallbackQuery,state:FSMContext):
+    await call.message.answer("your review was saved")
+    await state.clear()
 
 @review_router.message (RestaurantReview.name)
 async  def process_name (m:types.Message,state:FSMContext):
