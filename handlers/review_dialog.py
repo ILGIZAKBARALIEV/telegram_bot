@@ -16,26 +16,28 @@ class RestaurantReview(StatesGroup):
 
 @review_router.callback_query(F.data=='review')
 async  def start_review(call:types.CallbackQuery,state:FSMContext):
-    await call.answer("enter your review stop bot by '/stop' or '/стоп' ")
     await call.message.answer("What's your name")
     await state.set_state(RestaurantReview.name)
 
-@review_router.callback_query(Command("stop"))
-@review_router.callback_query(F.text=='стоп')
-
-
+@review_router.message(Command("stop"))
+@review_router.message(F.text =="Стоп")
 async def stop_review(call:types.CallbackQuery,state:FSMContext):
+    await call.answer('enter your review stop bot by "/Stop" or "/Стоп" ')
     await call.message.answer("your review was saved")
     await state.clear()
 
 @review_router.message (RestaurantReview.name)
 async  def process_name (m:types.Message,state:FSMContext):
+    instagram_username = m.text
+    await  state.update_data(name=m.text)
     await state.update_data(name=m.text)
     await m.answer("what's your instagram?")
     await  state.set_state(RestaurantReview.instagram_username)
 
 @review_router.message (RestaurantReview.instagram_username)
 async  def process_name (m:types.Message,state:FSMContext):
+    rate = m.text
+    await  state.update_data(rate=m.text)
     await state.update_data(instagram_username=m.text)
     await m.answer("How would you rate our cafe?")
     await  state.set_state(RestaurantReview.rate)
@@ -55,7 +57,12 @@ async  def process_name (m:types.Message,state:FSMContext):
 
 @review_router.message (RestaurantReview.extra_comments)
 async  def process_name (m:types.Message,state:FSMContext):
-    await state.update_data(extra=m.text)
+    review_text = m.text
+    await  state.update_data(extra_comments=m.text)
+    await state.get_data()
     data = await  state.get_data()
-    await m.answer(f'name:{data["name"]}\n instagram: {data["instagram_username"]}\n rate:{data["rate"]}\n extra_comments: {data["extra"]}')
+    await m.answer(f'name:{data["name"]}\n instagram: {data["instagram_username"]}\n rate:{data["rate"]}\n extra_comments: {data["extra_comments"]}')
+    # all data_base saved here
+    await  m.answer("thank you ")
+    print(data)
     await  state.clear()
