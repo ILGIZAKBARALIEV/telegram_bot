@@ -1,21 +1,35 @@
-from aiogram import Bot, Dispatcher, Router
+from aiogram import Router, F, types
 from aiogram.filters import Command
-from aiogram import types
-from aiogram.types import InlineKeyboardMarkup,InlineKeyboardButton
-
 
 
 start_router = Router()
 
 
+@start_router.message(Command("start"))
+async def start_handler(message: types.Message):
+    name = message.from_user.first_name
+    kb = types.InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                types.InlineKeyboardButton(text="Наш сайт", url="http://nlkr.gov.kg/"),
+                types.InlineKeyboardButton(text="Наш телеграм ", url="https://t.me/libmonster")
+            ],
+            [
+                types.InlineKeyboardButton(
+                    text="О нас", callback_data="about_us"
+                )
+            ],
+            [types.InlineKeyboardButton(text='review', callback_data='review')],
 
-kb = types.InlineKeyboardMarkup(inline_keyboard=[
-    [types.InlineKeyboardButton(text='review', callback_data='review')]
-])
+            [
+                types.InlineKeyboardButton(text="Каталог", callback_data="menu")
+            ]
+        ]
+    )
+    await message.answer(f"Привет, {name}", reply_markup=kb)
 
 
-@start_router.message(Command('start'))
-async def start_handlers(message: types.Message):
-    name = message.from_user.full_name
-    await message.answer(f'Привет {name}',reply_markup=kb)
-
+@start_router.callback_query(F.data == "about_us")
+async def about_us_handler(callback: types.CallbackQuery):
+    await callback.answer()
+    await callback.message.answer("Мы -  служба доставка еды ")
