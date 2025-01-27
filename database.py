@@ -1,27 +1,43 @@
 import sqlite3
 
-
 class Database:
-    def __init__(self, path: str):
+    def __init__(self,path:str):
         self.path = path
-
     def create_tables(self):
         with sqlite3.connect(self.path) as conn:
-            cursor = conn.cursor()
-            conn.execute("""
+            conn.execute(
+            """
             CREATE TABLE IF NOT EXISTS review (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                age INTEGER,
-                review  TEXT
+                name TEXT NOT NULL,
+                inst  REAL NOT NULL,
+                rate TEXT,
+                extra TEXT NOT NULL,
+                
             )
-            """)
+        """)
+        conn.execute("""
+        CREATE TABLE IF NOT EXISTS dish(
+              id  INTEGER PRIMARY KEY AUTOINCREMENT,
+              name TEXT,
+              price TEXT,
+              desc TEXT,
+              cat TEXT,
+              portion TEXT
+              )
+              """)
+    def save_review(self, data:dict):
+        with sqlite3.connect(self.path) as conn:
+            conn.execute(
+                """
+                INSERT INTO review (name,inst,rate,extra)"""
+            ,
+                (data["name"],data["instagram_username"],data["rate"],data["extra"])
+            )
+
+    def save_dish(self,data:dict):
+        with sqlite3.connect(self.path) as conn:
             conn.execute("""
-            CREATE TABLE IF NOT EXISTS review(
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT,
-                year INTEGER,
-                author TEXT,
-                price INTEGER
-            )
-            """)
+            INSERT INTO dishes (name, price, description, category, portion_options)
+            VALUES (?, ?, ?, ?, ?)
+        """, (data["name"], data["price"], data["description"], data["cat"], data["portion"]))
