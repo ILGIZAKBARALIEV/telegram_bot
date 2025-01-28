@@ -8,7 +8,7 @@ from bot_config import  database
 
 dish_router = Router()
 dish_router.message.filter(
-    F.from_user.id == 7107548042
+    F.from_user.id ==  7107548042
 )
 class Dish(StatesGroup):
     name = State()
@@ -34,7 +34,7 @@ async  def process_name (m:types.Message,state:FSMContext):
 @dish_router.message (Dish.price)
 async  def process_name (m:types.Message,state:FSMContext):
     await  state.update_data(price=m.text)
-    await m.answer(" add  description?")
+    await m.answer("what's your discription?")
     await  state.set_state(Dish.description)
 
 @dish_router.message (Dish.description)
@@ -44,15 +44,16 @@ async  def process_name (m:types.Message,state:FSMContext):
     await  state.set_state(Dish.category)
 
 @dish_router.message (Dish.category)
-async  def process_name (m,state):
-    await state.updata_data(cal=m.text)
+async  def process_name (m:types.Message,state:FSMContext):
+    await state.update_data(cat=m.text)
+    await m.answer("what's your portion?")
     await  state.set_state(Dish.portion)
 
 @dish_router.message(Dish.portion)
 async  def process_portion_data(m:types.Message,state:FSMContext):
-    await state.update_data(category=m.text)
+    await state.update_data(portion=m.text)
     data = await state.get_data()
-    await m.answer(f"name:{data['name']}\n price:{data['price']}\ndeck:{data['deck']}\n portion:{data['portion']}")
+    await m.answer(f"name:{data['name']}\n, price:{data['price']}\n, desc:{data['desc']}\n, portion:{data['portion']}\n")
     database.save_dish(data)
     await state.clear()
 
