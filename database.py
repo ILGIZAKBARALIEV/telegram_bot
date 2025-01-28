@@ -9,10 +9,10 @@ class Database:
             """
             CREATE TABLE IF NOT EXISTS review (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                inst  REAL NOT NULL,
+                name TEXT,
+                inst TEXT,
                 rate TEXT,
-                extra TEXT NOT NULL,
+                extra TEXT
                 
             )
         """)
@@ -36,6 +36,14 @@ class Database:
             )
 
     def save_dish(self,data:dict):
+        with sqlite3.connect(self.path) as conn:
+            conn.execute("""
+            INSERT INTO dishes (name, price, description, category, portion_options)
+            VALUES (?, ?, ?, ?, ?)
+        """, (data["name"], data["price"], data["description"], data["cat"], data["portion"]))
+
+
+    def list_dish(self,data:dict):
         with sqlite3.connect(self.path) as conn:
             conn.execute("""
             INSERT INTO dishes (name, price, description, category, portion_options)

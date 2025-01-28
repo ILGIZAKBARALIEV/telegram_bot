@@ -1,7 +1,6 @@
 from aiogram import Router, F, types
 from aiogram.filters import Command
 
-
 start_router = Router()
 
 
@@ -20,6 +19,8 @@ async def start_handler(message: types.Message):
                 )
             ],
             [types.InlineKeyboardButton(text='review', callback_data='review')],
+            [types.InlineKeyboardButton(text='dish_add', callback_data='dish_add')],
+            [types.InlineKeyboardButton(text='list_dish', callback_data='list_dish')],
 
             [
                 types.InlineKeyboardButton(text="Каталог", callback_data="menu")
