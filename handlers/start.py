@@ -20,7 +20,7 @@ async def start_handler(message: types.Message):
             ],
             [types.InlineKeyboardButton(text='review', callback_data='review')],
             [types.InlineKeyboardButton(text='dish_add', callback_data='dish_add')],
-            [types.InlineKeyboardButton(text='list_dish', callback_data='list_dish')],
+
 
             [
                 types.InlineKeyboardButton(text="Каталог", callback_data="menu")
@@ -34,3 +34,8 @@ async def start_handler(message: types.Message):
 async def about_us_handler(callback: types.CallbackQuery):
     await callback.answer()
     await callback.message.answer("Мы -  служба доставка еды ")
+
+@start_router.callback_query(F.data == "list_dish")
+async def show_dishes(callback: types.CallbackQuery):
+    await callback.answer()
+    await callback.message.answerlist_dishes(callback.message)
