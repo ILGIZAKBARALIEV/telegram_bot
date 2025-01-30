@@ -10,9 +10,11 @@ async  def main():
     dp.include_router(start.start_router)
     dp.include_router(dish_fsm.dish_router)
     dp.include_router(dishes.dish_router)
+    database.create_tables()
     dp.include_router(myinfo.other_router)
 
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     asyncio.run(main())

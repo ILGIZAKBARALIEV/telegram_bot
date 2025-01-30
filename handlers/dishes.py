@@ -13,6 +13,6 @@ async def list_dishes(message: types.Message):
 
     response = "📌 *Список блюд:*\n\n"
     for dish in dishes:
-        response += f"🍽 *{dish['name']}*\n💰 Цена: {dish['price']} \n📖 Описание: {dish['description']} \n🍴 Порция: {dish['portion']}\n\n"
+        response += f"🍽 *{dish['name']}*\n💰 Цена: {dish['price']} \n📖 Описание: {dish['description']} \n 🍴 Порция: {dish['portion']}\n\n"
 
     await message.answer(response, parse_mode="Markdown")

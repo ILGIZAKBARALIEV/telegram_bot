@@ -1,3 +1,4 @@
+import pprint
 
 from aiogram import Bot, Dispatcher, Router,F
 from aiogram.filters import Command
@@ -41,13 +42,13 @@ async  def process_name (m:types.Message,state:FSMContext):
 
 @dish_router.message (Dish.description)
 async  def process_name (m:types.Message,state:FSMContext):
-    await state.update_data(desc=m.text)
+    await state.update_data(description=m.text)
     await m.answer("what's the category")
     await  state.set_state(Dish.category)
 
 @dish_router.message (Dish.category)
 async  def process_name (m:types.Message,state:FSMContext):
-    await state.update_data(cat=m.text)
+    await state.update_data(category=m.text)
     await m.answer("what's your portion?")
     await  state.set_state(Dish.portion)
 
@@ -55,7 +56,7 @@ async  def process_name (m:types.Message,state:FSMContext):
 async  def process_portion_data(m:types.Message,state:FSMContext):
     await state.update_data(portion=m.text)
     data = await state.get_data()
-    await m.answer(f"name:{data['name']}\n, price:{data['price']}\n, desc:{data['desc']}\n, portion:{data['portion']}\n")
+    await m.answer(f"name:{data['name']}\n, price:{data['price']}\n, desc:{data['description']}\n, portion:{data['portion']}\n")
     database.save_dish(data)
     print(data)
     await state.clear()

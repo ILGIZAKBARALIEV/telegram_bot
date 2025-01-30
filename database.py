@@ -22,9 +22,9 @@ class Database:
         CREATE TABLE IF NOT EXISTS dish(
               id  INTEGER PRIMARY KEY AUTOINCREMENT,
               name TEXT,
-              price TEXT,
-              desc TEXT,
-              cat TEXT,
+              price INTEGER,
+              description  TEXT,
+              category TEXT,
               portion TEXT
               )
               """)
@@ -40,17 +40,25 @@ class Database:
 
 
 
-    def save_dish(self, data: dict):
+    def  save_dish(self, data: dict):
         with sqlite3.connect(self.path) as conn:
             conn.execute("""
-             INSERT INTO dishes (name, price, description, category, portion_options)
+             INSERT INTO dish (
+              name,
+              price ,
+              category,
+              description,
+              portion
+              )
              VALUES (?, ?, ?, ?, ?)
-         """, (data["name"], data["price"], data["description"], data["cat"], data["portion"]))
+         """, (data["name"], data["price"], data["category"], data["description"], data["portion"]))
 
     def get_list_dish(self):
         with sqlite3.connect(self.path) as conn:
             cursor = conn.cursor()
-            result = conn.execute("SELECT * FROM Dishes")
+            result = conn.execute("SELECT * FROM Dish")
             result.row_factory = sqlite3.Row
+
             data = result.fetchall()
+            return [dict(row) for row in data]
 
