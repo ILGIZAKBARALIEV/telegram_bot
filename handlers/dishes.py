@@ -6,7 +6,7 @@ dish_router = Router()
 
 @dish_router.message(Command("list_dish"))
 async def list_dishes(message: types.Message):
-    dishes = database.get_all_dishes()  # Получаем все блюда из БД
+    dishes = database.get_list_dish()
     if not dishes:
         await message.answer("Список блюд пуст.")
         return

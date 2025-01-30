@@ -5,4 +5,4 @@ import asyncio
 token= dotenv_values(".env")["TOKEN"]
 bot = Bot(token=token)
 dp = Dispatcher()
-database = Database("db.db")
+database = Database("bot_database.db")

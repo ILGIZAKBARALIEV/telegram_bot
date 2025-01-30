@@ -1,7 +1,7 @@
 import  asyncio
 import logging
 from aiogram import Bot
-from bot_config import bot, dp,database
+from bot_config import  bot, dp,database
 from handlers import (start, myinfo, random, review_dialog, dish_fsm,dishes)
 
 async  def main():

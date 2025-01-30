@@ -30,6 +30,8 @@ async  def process_name (m:types.Message,state:FSMContext):
     await  state.update_data(name=m.text)
     await m.answer("what's your price?")
     await  state.set_state(Dish.price)
+    if m.text.isdigit():
+        await  m.answer("write only digits !!!")
 
 @dish_router.message (Dish.price)
 async  def process_name (m:types.Message,state:FSMContext):
@@ -55,7 +57,7 @@ async  def process_portion_data(m:types.Message,state:FSMContext):
     data = await state.get_data()
     await m.answer(f"name:{data['name']}\n, price:{data['price']}\n, desc:{data['desc']}\n, portion:{data['portion']}\n")
     database.save_dish(data)
+    print(data)
     await state.clear()
-
 
 
