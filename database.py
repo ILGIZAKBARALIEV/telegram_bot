@@ -1,64 +1,40 @@
 import sqlite3
 
-
 class Database:
     def __init__(self, path: str):
         self.path = path
 
     def create_tables(self):
         with sqlite3.connect(self.path) as conn:
-            conn.execute(
-                """
-                CREATE TABLE IF NOT EXISTS review (
+            # Создание таблицы для блюд
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS dish(
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
-                    inst TEXT,
-                    rate TEXT,
-                    extra TEXT
-    
+                    price REAL,
+                    description TEXT,
+                    category TEXT,
+                    portion TEXT,
+                    photo TEXT
                 )
             """)
-        conn.execute("""
-        CREATE TABLE IF NOT EXISTS dish(
-              id  INTEGER PRIMARY KEY AUTOINCREMENT,
-              name TEXT,
-              price INTEGER,
-              description  TEXT,
-              category TEXT,
-              portion TEXT
-              )
-              """)
 
-    def save_review(self, data: dict):
-        with sqlite3.connect(self.path) as conn:
-            conn.execute(
-                """
-                INSERT INTO review (name,inst,rate,extra)"""
-                ,
-                (data["name"], data["instagram_username"], data["rate"], data["extra"])
-            )
-
-
-
-    def  save_dish(self, data: dict):
+    def save_dish(self, data: dict):
         with sqlite3.connect(self.path) as conn:
             conn.execute("""
-             INSERT INTO dish (
-              name,
-              price ,
-              category,
-              description,
-              portion
-              )
-             VALUES (?, ?, ?, ?, ?)
-         """, (data["name"], data["price"], data["category"], data["description"], data["portion"]))
+                INSERT INTO dish (name, price, category, description, portion, photo)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (data["name"], data["price"], data["category"], data["description"], data["portion"], data.get("photo", "")))
 
-    def get_list_dish(self):
+    def get_list_dish(self, limit: int = 5, offset: int = 0):
         with sqlite3.connect(self.path) as conn:
             cursor = conn.cursor()
-            result = conn.execute("SELECT * FROM Dish")
-            result.row_factory = sqlite3.Row
+            cursor.execute("SELECT * FROM dish LIMIT ? OFFSET ?", (limit, offset))
+            rows = cursor.fetchall()
+            return [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
 
-            data = result.fetchall()
-            return [dict(row) for row in data]
-
+    def get_total_dishes(self):
+        with sqlite3.connect(self.path) as conn:
+            cursor = conn.cursor()
+            cursor.execute('SELECT COUNT(*) FROM dish')
+            return cursor.fetchone()[0]
