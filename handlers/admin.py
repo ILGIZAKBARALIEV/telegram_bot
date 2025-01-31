@@ -6,9 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 
 admin_router = Router()
 
-
 FORBIDDEN_WORDS = {"xd"}
-
 
 def parse_time(time_str: str):
     units = {"s": 1, "m": 60, "h": 3600, "d": 86400}
@@ -18,7 +16,6 @@ def parse_time(time_str: str):
         return value * units.get(unit, 60)
     except ValueError:
         return 600
-
 
 @admin_router.message(F.chat.type.in_({"group", "supergroup"}))
 async def check_message(message: types.Message):
